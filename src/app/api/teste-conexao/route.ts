@@ -1,4 +1,4 @@
-// src/app/api/test-connection/route.ts
+
 import { connectToDatabase } from '@/lib/mongodb';
 import { NextResponse } from 'next/server';
 
