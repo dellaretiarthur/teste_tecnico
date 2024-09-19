@@ -167,12 +167,22 @@ export default function RegisterPage() {
           >
             Cadastrar
           </button>
-          <Link href="/auth/login" className="block text-center text-blue-500 hover:underline">
-           Já possui uma conta? Faça login
-          </Link>
-          <Link href='/' className="block text-center text-blue-500 hover:underline">
-        Voltar para início
-        </Link>
+          <div className="text-center mt-4">
+          <p className="text-sm text-gray-600">
+            Já tem uma conta?{' '}
+            <a href="/pages/login" className="text-blue-500 hover:text-blue-700 font-semibold">
+              Login
+            </a>
+          </p>
+        </div>
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-600">
+            voltar para início?{' '}
+            <a href="/" className="text-blue-500 hover:text-blue-700 font-semibold">
+              Início
+            </a>
+          </p>
+        </div>
 
         </form>
         {message && <p className="mt-4 text-center text-green-700">{message}</p>}
