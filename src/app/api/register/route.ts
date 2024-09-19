@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 import User from '@/lib/models/Users';
 import { getAddressByCep } from '@/lib/cep';
 import * as z from 'zod';
+import bcrypt from 'bcryptjs';
 
 const registerSchema = z.object({
   email: z.string().email('Email inválido ou já utilizado').min(1, 'Campo obrigatório'),
@@ -23,11 +24,12 @@ export async function POST(request: Request) {
     }
 
     const address = await getAddressByCep(cep);
+    const hashedPassword = await bcrypt.hash(password, 6);
 
 
     const newUser = new User({
       email,
-      password,
+      password: hashedPassword,
       address,
     });
     await newUser.save();
