@@ -50,7 +50,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validações no frontend
+
     if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
       setError('Email inválido');
       return;

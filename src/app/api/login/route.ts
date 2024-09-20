@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
       JWT_SECRET,
       { expiresIn: '1h' }
     );
+
 
     return NextResponse.json({
       message: 'Login realizado com sucesso!',

@@ -1,42 +1,49 @@
 "use client";
 
-
-
 import { useState } from "react";
+import UserListModal from "@/lib/userListModal";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 
+export default function login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-export default function login () {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
+    event.preventDefault();
 
-    const handleSubmit = async (event: { preventDefault: () => void; }) => {
-        event.preventDefault();
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
+    const data = await response.json();
 
-        const data = await response.json();
+    if (response.ok) {
+      localStorage.setItem("token", data.token);
+      alert("Login realizado com sucesso!!");
+      setIsModalOpen(true);
+    } else {
+      alert(data.error || "Erro ao realizar login");
+    }
+  };
 
-       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        alert("Login realizado com sucesso!!")
-       } else {
-        alert(data.error || 'Erro ao realizar login')
-       }
-    };
-
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
-        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">Login</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">
+          Login
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -46,24 +53,38 @@ export default function login () {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
               placeholder="Digite seu email"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Senha
             </label>
             <input
               id="password"
               name="password"
-              type="password"
+              type= {showPassword ? "text" : "password"}
               required
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
               placeholder="Digite sua senha"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="flex justify-end w-full mt-1"
+            >
+              {showPassword ? (
+                <Eye className="h-5 w-5 text-black justify-center mt-1" />
+              ) : (
+                <EyeSlash className="h-5 w-5 text-black justify-center mt-1" />
+              )}
+            </button>
           </div>
           <div>
             <button
@@ -77,13 +98,20 @@ export default function login () {
 
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
-            Não tem uma conta?{' '}
-            <a href="/pages/register" className="text-blue-500 hover:text-blue-700 font-semibold">
+            Não tem uma conta?{" "}
+            <a
+              href="/pages/register"
+              className="text-blue-500 hover:text-blue-700 font-semibold"
+            >
               Registre-se
             </a>
           </p>
         </div>
+        <UserListModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </div>
     </div>
-    )
+  );
 }
